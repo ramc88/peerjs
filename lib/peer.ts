@@ -229,11 +229,6 @@ export class Peer extends EventEmitter<PeerEvents> {
 		};
 		this._options = options;
 
-		// Detect relative URL host.
-		if (this._options.host === "/") {
-			this._options.host = window.location.hostname;
-		}
-
 		// Set path correctly.
 		if (this._options.path) {
 			if (this._options.path[0] !== "/") {

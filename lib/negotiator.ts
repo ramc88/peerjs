@@ -142,10 +142,10 @@ export class Negotiator<
 		// MEDIACONNECTION.
 		logger.log("Listening for remote stream");
 
-		peerConnection.ontrack = (evt) => {
+		peerConnection.onaddstream = (evt) => {
 			logger.log("Received remote stream");
 
-			const stream = evt.streams[0];
+			const stream = evt.streams;
 			const connection = provider.getConnection(peerId, connectionId);
 
 			if (connection.type === ConnectionType.Media) {
@@ -171,7 +171,7 @@ export class Negotiator<
 		peerConnection.onicecandidate =
 			peerConnection.oniceconnectionstatechange =
 			peerConnection.ondatachannel =
-			peerConnection.ontrack =
+			peerConnection.onaddstream =
 				() => {};
 
 		const peerConnectionNotClosed = peerConnection.signalingState !== "closed";
@@ -357,15 +357,15 @@ export class Negotiator<
 		peerConnection: RTCPeerConnection,
 	): void {
 		logger.log(`add tracks from stream ${stream.id} to peer connection`);
-
-		if (!peerConnection.addTrack) {
+		logger.log(`${peerConnection.addStream}`)
+		if (!peerConnection.addStream) {
 			return logger.error(
-				`Your browser does't support RTCPeerConnection#addTrack. Ignored.`,
+				`Your browser does't support RTCPeerConnection#addStream. Ignored.`,
 			);
 		}
 
 		stream.getTracks().forEach((track) => {
-			peerConnection.addTrack(track, stream);
+			peerConnection.addStream(track, stream);
 		});
 	}
 
